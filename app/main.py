@@ -1,6 +1,6 @@
 import re
 from fastapi import FastAPI, Depends, status, HTTPException, Request, Query
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.exceptions import RequestValidationError
 import hashlib
 from . import models, schemas
@@ -80,6 +80,10 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content={"detail": "Invalid request body"}
     )
 
+@app.get("/")
+def home():
+    return RedirectResponse("/docs")
+    
 
 @app.post("/strings", status_code=status.HTTP_201_CREATED, response_model=schemas.stringResponse)
 def create_string(blob: schemas.stringCreate, db: Session = Depends(get_db)):
